@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Online Bookstore</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: #eef2f7;
+        }
+        header {
+            background: #1a237e;
+            color: white;
+            padding: 15px 30px;
+            font-size: 22px;
+            display: flex;
+            justify-content: space-between;
+        }
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        input, select {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .btn {
+            display: inline-block;
+            min-width: 100px;
+            text-align: center;
+            padding: 8px 12px;
+            background: #3949ab;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .reset-btn {
+            background: #e74c3c;
+        }
+        .cart-btn {
+            background: #27ae60;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .author {
+            color: gray;
+            margin: 8px 0;
+        }
+        .price {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .badge {
+            background: gold;
+            padding: 3px 6px;
+            font-size: 12px;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 22px;
+            color: red;
+            margin-top: 40px;
+        }
+        .btn-group {
+            display: inline-flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    📚 Online Bookstore
+    <span>
+        Trust-Based System |
+        <a href="/cart">🛒 Cart</a>
+    </span>
+</header>
+<div class="container">
+
+<form method="get" class="search-bar">
+    <input type="text" name="search" placeholder="Search books..."
+           value="{{search}}">
+
+    <select name="price">
+        <option value="">All Prices</option>
+        <option value="low" {% if price_filter=='low' %}selected{% endif %}>Below ₹700</option>
+        <option value="mid" {% if price_filter=='mid' %}selected{% endif %}>₹700 - ₹900</option>
+        <option value="high" {% if price_filter=='high' %}selected{% endif %}>Above ₹900</option>
+    </select>
+
+    <select name="sort">
+        <option value="">Sort By</option>
+        <option value="low_price" {% if sort=='low_price' %}selected{% endif %}>Price Low → High</option>
+        <option value="high_price" {% if sort=='high_price' %}selected{% endif %}>Price High → Low</option>
+    </select>
+
+    <div class="btn-group">
+        <button type="submit" class="btn">Search</button>
+        <a href="/" class="btn reset-btn">Reset</a>
+    </div>
+</form>
+
+<div class="grid">
+{% if books|length == 0 %}
+    <div class="no-results">
+        ❌ No Books Available
+    </div>
+{% else %}
+
+{% for book in books %}
+<div class="card">
+    <div class="title">
+        {{book.title}}
+
+        {% if book.base_price < 700 %}
+            <span class="badge">Best Deal</span>
+        {% endif %}
+    </div>
+    <div class="author">by {{book.author}}</div>
+    <div class="price">₹{{book.base_price}}</div>
+    <a class="btn" href="/book/{{book.title}}">
+        View Details
+    </a>
+    <br><br>
+    <a class="btn cart-btn" href="/add-to-cart/{{book.title}}">
+        🛒 Add to Cart
+    </a>
+</div>
+{% endfor %}
+
+{% endif %}
+</div>
+</div>
+</body>
+</html>
